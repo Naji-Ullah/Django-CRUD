@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Task
 from .forms import TaskForm
 
@@ -38,3 +38,11 @@ def task_delete(request, pk):
         return redirect("task-list")
     context = {"task": task}
     return render(request, "task_delete.html", context)
+
+
+def task_toggle_complete(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    if request.method == 'POST':
+        task.completed = 'completed' in request.POST
+        task.save()
+    return redirect('task-list')  # or your task list view name

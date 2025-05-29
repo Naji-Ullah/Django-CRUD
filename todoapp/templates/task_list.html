@@ -5,8 +5,6 @@
 <div class="todo-container">
   <div class="todo-search">
     <form action="" method="POST">
-     
-      {% comment %} <input type="text" placeholder="Enter Todo" /> {% endcomment %}
       {% csrf_token %}
       {{form.title}}
       <button>Add</button>
@@ -14,16 +12,15 @@
   </div>
 
   <div class="todo-list">
-    
-    
     {% for task in tasks %}
-
     <div class="todo-list-item">
-      <div class="task">
-        <input type="checkbox" />
-        <p>{{task.title}}</p>
-      </div>
-
+      <form action="{% url 'task-toggle-complete' task.id %}" method="POST" style="display:inline;">
+        {% csrf_token %}
+        <div class="task">
+          <input type="checkbox" name="completed" {% if task.completed %}checked{% endif %} onchange="this.form.submit()" />
+          <p {% if task.completed %}style="text-decoration: line-through;"{% endif %}>{{task.title}}</p>
+        </div>
+      </form>
       <div class="btn-container">
         <div class="edit">
           <a href="{% url 'task-update' task.id %}">
@@ -37,18 +34,7 @@
         </div>
       </div>
     </div>
-      
     {% endfor %}
-      
-   
-
-
-
-
-
-   
-
- 
   </div>
 </div>
 
